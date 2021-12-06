@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   .then(data => {
     data.forEach(item => {
       addCard(item)
+      
+      
+      })
     })
    })
   //Show form button
@@ -21,11 +24,35 @@ document.addEventListener("DOMContentLoaded", () => {
       toyFormContainer.style.display = "none";
     }
   });
-  //fill out form and create toy
-  const createToyBtn = document.querySelector('.submit')
-  createToyBtn.addEventListener('click', submitToy)
-  })
 
+  //fill out form and create toy
+  const createToyBtn = document.querySelector('.add-toy-form')
+  createToyBtn.addEventListener('submit', submitToy)
+
+  //increase a toy's likes
+  /*
+  const buttonCollection = Array.from(document.querySelectorAll('.like-btn'))
+  console.log(buttonCollection)
+  
+  const buttonCollectionArray =[...buttonCollection]
+  console.log(buttonCollectionArray)
+  buttonCollectionArray.forEach((button) => {
+    console.log(button)
+  }) */
+
+
+
+  //clickLike.addEventListener('click', clickForLike)
+
+  
+
+function clickForLike() {
+  console.log('click!')
+  /*
+  item.likes+= 1
+  oneCard.querySelector('card').p.innerText = item.likes + ' likes' 
+  sendPatch() */
+}
 
 function submitToy(event){
   console.log(event.target.image.value)
@@ -57,6 +84,24 @@ function addCard(item){
   oneCard.appendChild(cardImage)
   oneCard.appendChild(cardLikes)
   oneCard.appendChild(cardButton)
+
+  //create like button
+  cardButton.addEventListener('click', (event) => {
+    const cardId = event.target.id
+    
+    fetch(`http://localhost:3000/toys/${cardId}`, {
+      method: 'PATCH',
+      headers: {
+         'Content-Type': 'application/json',
+         'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        'likes': item.likes+1
+      })
+    })
+    .then(res => res.json())
+    .then(data => cardLikes.innerText = `${data.likes} `+'likes')
+})
 }
 
 function sendPost(newToy) {
@@ -73,3 +118,4 @@ function sendPost(newToy) {
     addCard(newToy)
   })
 }
+
